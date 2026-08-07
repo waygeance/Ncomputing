@@ -1,5 +1,8 @@
 // server.js — Express app entry point
 
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');

@@ -47,13 +47,10 @@ router.post('/verify', async (req, res) => {
       include: { items: { include: { product: true } } },
     });
 
-    // Send confirmation email with logging
-    try {
-      await sendOrderConfirmation(order);
-      console.log(`Order confirmation email sent to ${order.email} for order ${order.id}`);
-    } catch (mailErr) {
-      console.error('Order confirmation email error:', mailErr);
-    }
+    // Send confirmation email asynchronously (fire-and-forget)
+    sendOrderConfirmation(order)
+      .then(() => console.log(`Order confirmation email sent to ${order.email} for order ${order.id}`))
+      .catch((mailErr) => console.error('Order confirmation email error:', mailErr));
 
     res.json({ success: true, orderId: order.id });
   } catch (e) {
