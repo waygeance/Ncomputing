@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import LeadModal from './components/LeadModal'
+import AdminGuard from './components/AdminGuard'
 
 import Landing from './pages/Landing'
 import Problem from './pages/Problem'
@@ -50,8 +51,8 @@ function App() {
         {/* Admin routes (no public nav) */}
         <Route path="/admin" element={<Navigate to="/admin/orders" replace />} />
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/orders" element={<AdminOrders />} />
-        <Route path="/admin/leads" element={<AdminLeads />} />
+        <Route path="/admin/orders" element={<AdminGuard><AdminOrders /></AdminGuard>} />
+        <Route path="/admin/leads" element={<AdminGuard><AdminLeads /></AdminGuard>} />
       </Routes>
     </BrowserRouter>
   )
