@@ -55,14 +55,20 @@ function Checkout() {
         prefill: { name: form.name, email: form.email, contact: form.phone },
         theme: { color: '#4dab00' },
         handler: async (response) => {
-          await api.post('/payments/verify', {
-            razorpayOrderId: response.razorpay_order_id,
-            razorpayPaymentId: response.razorpay_payment_id,
-            razorpaySignature: response.razorpay_signature,
-            orderId,
-          })
-          clear()
-          navigate(`/order-confirmation/${orderId}`)
+          try {
+            await api.post('/payments/verify', {
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+              orderId,
+            })
+            clear()
+            navigate(`/order-confirmation/${orderId}`)
+          } catch (verifyErr) {
+            console.error('Payment verification error:', verifyErr)
+            setErr(verifyErr.response?.data?.error || 'Payment verification failed. Please try again.')
+            setLoading(false)
+          }
         },
         modal: { ondismiss: () => setLoading(false) },
       }
