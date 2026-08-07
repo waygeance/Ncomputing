@@ -1,66 +1,166 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+/* NComputing L-Series — Brand Design System */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Roboto:wght@300;400;500;700&family=Montserrat:wght@600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'Inter', sans-serif;
-    background-color: #0f0f1a;
-    color: #e2e8f0;
+    font-family: 'Roboto', sans-serif;
+    background: #ffffff;
+    color: #333333;
     line-height: 1.6;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3, h4 {
-    line-height: 1.2;
+  h1, h2, h3, h4, h5 {
+    font-family: 'Roboto', sans-serif;
+    color: #111111;
+    line-height: 1.24;
   }
+
+  a { text-decoration: none; }
 }
 
 @layer components {
+
+  /* ── Buttons ───────────────────────────────────────── */
   .btn {
-    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded font-montserrat font-bold text-14 tracking-wide transition-all duration-200 cursor-pointer select-none;
   }
 
-  .btn-primary {
-    @apply btn bg-brand-500 text-white hover:bg-brand-600 shadow-lg shadow-brand-500/30 hover:shadow-brand-600/40;
+  .btn-green {
+    @apply btn bg-brand text-white hover:bg-brand-dark shadow-sm hover:shadow-card;
   }
 
-  .btn-outline {
-    @apply btn border border-brand-500 text-brand-500 hover:bg-brand-500 hover:text-white;
+  .btn-outline-green {
+    @apply btn border-2 border-brand text-brand hover:bg-brand hover:text-white;
+  }
+
+  .btn-dark {
+    @apply btn bg-nc-dark text-white hover:bg-black;
   }
 
   .btn-ghost {
-    @apply btn text-slate-300 hover:text-white hover:bg-white/10;
+    @apply btn text-nc-body hover:text-brand hover:bg-brand-light;
   }
 
+  .btn-blue {
+    @apply btn bg-nc-blue text-white hover:bg-blue-800;
+  }
+
+  /* ── Cards ─────────────────────────────────────────── */
   .card {
-    @apply bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm;
+    @apply bg-white border border-nc-border rounded-lg p-6 shadow-card;
   }
 
+  .card-hover {
+    @apply card transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1;
+  }
+
+  .card-highlight {
+    @apply bg-nc-highlight border border-yellow-200 rounded-lg p-6;
+  }
+
+  .card-dark {
+    @apply bg-nc-dark text-white rounded-lg p-6;
+  }
+
+  /* ── Forms ─────────────────────────────────────────── */
   .input {
-    @apply w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-colors;
+    @apply w-full px-4 py-3 rounded border border-nc-border bg-white text-nc-body text-15
+           placeholder-nc-light focus:outline-none focus:border-nc-blue focus:ring-2 focus:ring-nc-blue/10
+           transition-all duration-150;
   }
 
   .label {
-    @apply block text-sm font-medium text-slate-400 mb-1;
+    @apply block text-14 font-medium text-nc-body mb-1.5;
   }
 
+  .select {
+    @apply input appearance-none cursor-pointer;
+  }
+
+  /* ── Badges ────────────────────────────────────────── */
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-13 font-medium;
   }
 
+  .badge-green   { @apply badge bg-brand-light text-brand; }
+  .badge-blue    { @apply badge bg-blue-50 text-nc-blue; }
+  .badge-yellow  { @apply badge bg-yellow-50 text-yellow-700; }
+  .badge-orange  { @apply badge bg-orange-50 text-orange-600; }
+  .badge-red     { @apply badge bg-red-50 text-red-600; }
+  .badge-gray    { @apply badge bg-nc-bg text-nc-mid; }
+
+  /* ── Layout ────────────────────────────────────────── */
   .section {
-    @apply py-20 px-4 max-w-6xl mx-auto;
+    @apply py-16 px-4 max-w-6xl mx-auto;
   }
 
-  .stat-card {
-    @apply card text-center;
+  .section-sm {
+    @apply py-10 px-4 max-w-6xl mx-auto;
   }
+
+  /* ── Section headings ──────────────────────────────── */
+  .section-title {
+    @apply text-34 font-bold text-nc-dark font-open tracking-tight;
+  }
+
+  .section-sub {
+    @apply text-17 text-nc-mid font-sans leading-relaxed;
+  }
+
+  /* ── Divider ───────────────────────────────────────── */
+  .divider {
+    @apply border-t border-nc-border my-8;
+  }
+
+  /* ── Tables (admin) ────────────────────────────────── */
+  .admin-table {
+    @apply w-full text-14 border-collapse;
+  }
+
+  .admin-table th {
+    @apply text-left px-4 py-3 text-nc-mid font-medium uppercase text-13 tracking-wide border-b border-nc-border bg-nc-bg;
+  }
+
+  .admin-table td {
+    @apply px-4 py-3.5 border-b border-nc-border/60 text-nc-body;
+  }
+
+  .admin-table tr:hover td {
+    @apply bg-nc-bg/60;
+  }
+
+  /* ── Hero strip ────────────────────────────────────── */
+  .hero-strip {
+    background: linear-gradient(135deg, #1a1c20 0%, #2d3040 60%, #1a1c20 100%);
+  }
+
+  /* ── Green line accent ─────────────────────────────── */
+  .accent-line {
+    @apply block w-12 h-1 bg-brand rounded-full mb-4;
+  }
+
+  /* ── Spec row ──────────────────────────────────────── */
+  .spec-row {
+    @apply flex justify-between items-center py-2 border-b border-nc-border/50 text-14 last:border-0;
+  }
+
+  /* ── Stat card ─────────────────────────────────────── */
+  .stat-box {
+    @apply bg-nc-highlight border border-yellow-100 rounded-lg p-5 text-center;
+  }
+}
+
+/* Framer Motion — respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

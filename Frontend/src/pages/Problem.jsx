@@ -1,96 +1,150 @@
-// Problem.jsx — The pain point page
+// Problem.jsx — clean white layout with comparison stats
 
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { ArrowRight, XCircle, TrendingDown, Zap, Cpu } from 'lucide-react'
+
+const fade = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }
+const stagger = { show: { transition: { staggerChildren: 0.1 } } }
 
 const STATS = [
   {
-    label: 'Cost: 40-seat computer lab',
-    pc: '₹28,00,000',
-    lseries: '₹4,00,000',
+    icon: Cpu,
+    label: '40-seat computer lab',
+    pc: { val: '₹28,00,000', sub: '40 PCs @ ₹70,000 each' },
+    ls: { val: '₹4,00,000', sub: '40 L-series + 1 server PC' },
     saving: '85% cheaper',
-    note: '40 PCs @ ₹70,000 vs 40 L-series + 1 server PC @ ₹10 lakh',
   },
   {
+    icon: Zap,
     label: 'Power draw per workstation',
-    pc: '~120W',
-    lseries: '~4W',
-    saving: '30x less power',
-    note: 'A 40-seat lab saves ₹50,000/yr on electricity alone',
+    pc: { val: '~120W', sub: 'Standard desktop PC' },
+    ls: { val: '3–5W', sub: 'NComputing L-Series' },
+    saving: '30× less power',
   },
   {
-    label: 'IT maintenance',
-    pc: 'Per machine',
-    lseries: 'One server',
+    icon: TrendingDown,
+    label: 'IT maintenance scope',
+    pc: { val: '40 machines', sub: 'Individual updates & repairs' },
+    ls: { val: '1 server', sub: 'Centralised management' },
     saving: 'Central control',
-    note: 'Update, patch, and manage all desktops from a single server',
   },
+]
+
+const PAINS = [
+  'Computer lab upgrade is overdue but the budget keeps getting rejected.',
+  "You're paying high electricity bills running 40+ PCs all day.",
+  "One IT person can't keep up with 50 individual machines.",
+  'You replaced 10 PCs last year — hardware failures keep mounting.',
+  'Students or staff wait because machines are slow or broken.',
 ]
 
 function Problem({ onDemo }) {
   return (
     <div>
-      <section className="section pt-32">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4">
-            Equipping a computer lab<br />
-            <span className="text-red-400">should not cost a fortune.</span>
-          </h1>
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg">
-            For every school or small business in India that needs 30–100 workstations,
-            the traditional approach — buy one PC per desk — is a financial trap.
-          </p>
+      {/* Hero strip */}
+      <section className="hero-strip py-20 pt-32 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <span className="accent-line mx-auto" />
+            <h1 className="text-44 font-bold text-white font-open mb-4">
+              Equipping a computer lab<br />
+              <span className="text-brand">should not cost a fortune.</span>
+            </h1>
+            <p className="text-17 text-gray-300 max-w-2xl mx-auto">
+              For every school or small business in India that needs 30–100 workstations,
+              the traditional approach — one PC per desk — is a financial trap.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Stats comparison */}
+      <section className="section">
+        <div className="text-center mb-10">
+          <span className="accent-line mx-auto" />
+          <h2 className="section-title mb-3">The Numbers Don't Lie</h2>
+          <p className="section-sub">Side-by-side comparison: traditional PCs vs NComputing L-Series</p>
         </div>
 
-        {/* Comparison cards */}
-        <div className="space-y-4 mb-16">
-          {STATS.map((s) => (
-            <div key={s.label} className="card">
-              <div className="flex flex-col md:flex-row md:items-center gap-4">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-white mb-1">{s.label}</h3>
-                  <p className="text-xs text-slate-500">{s.note}</p>
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="space-y-4"
+        >
+          {STATS.map(({ icon: Icon, label, pc, ls, saving }) => (
+            <motion.div key={label} variants={fade} className="card">
+              <div className="flex flex-col md:flex-row md:items-center gap-6">
+                <div className="flex items-center gap-3 md:w-56 shrink-0">
+                  <div className="w-9 h-9 rounded-lg bg-brand-light flex items-center justify-center">
+                    <Icon size={18} className="text-brand" />
+                  </div>
+                  <span className="text-15 font-medium text-nc-dark">{label}</span>
                 </div>
-                <div className="flex gap-6 items-center">
+
+                <div className="flex-1 grid grid-cols-3 gap-4 items-center">
+                  {/* PC */}
                   <div className="text-center">
-                    <div className="text-sm text-slate-500 mb-1">Full PC</div>
-                    <div className="text-xl font-bold text-red-400">{s.pc}</div>
+                    <div className="text-13 text-nc-light mb-1 uppercase tracking-wide">Full PC</div>
+                    <div className="text-20 font-bold text-red-500">{pc.val}</div>
+                    <div className="text-13 text-nc-light">{pc.sub}</div>
                   </div>
-                  <div className="text-slate-600 text-xl">→</div>
+
+                  {/* Arrow */}
+                  <div className="flex justify-center">
+                    <span className="badge-green font-montserrat font-bold">{saving}</span>
+                  </div>
+
+                  {/* L-Series */}
                   <div className="text-center">
-                    <div className="text-sm text-slate-500 mb-1">L-Series</div>
-                    <div className="text-xl font-bold text-green-400">{s.lseries}</div>
-                  </div>
-                  <div className="badge bg-green-500/10 text-green-400 border border-green-500/20 px-3 py-1 text-sm whitespace-nowrap">
-                    {s.saving}
+                    <div className="text-13 text-nc-light mb-1 uppercase tracking-wide">L-Series</div>
+                    <div className="text-20 font-bold text-brand">{ls.val}</div>
+                    <div className="text-13 text-nc-light">{ls.sub}</div>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
+      </section>
 
-        {/* Pain points list */}
-        <div className="card mb-12">
-          <h2 className="text-xl font-bold text-white mb-6">Sound familiar?</h2>
-          <ul className="space-y-3">
-            {[
-              `Your computer lab needs upgrading but the budget just isn't there.`,
-              "You're paying high electricity bills running 40+ PCs all day.",
-              "One IT person can't keep up with issues on 50 individual machines.",
-              'You replaced 10 PCs last year due to hardware failures.',
-              'Students or staff are waiting because machines are slow or broken.',
-            ].map((pain) => (
-              <li key={pain} className="flex items-start gap-3 text-slate-300 text-sm">
-                <span className="text-red-400 mt-0.5">✗</span>
-                {pain}
-              </li>
+      {/* Pain points */}
+      <section className="bg-nc-bg py-16 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <span className="accent-line mx-auto" />
+            <h2 className="section-title mb-2">Sound Familiar?</h2>
+          </div>
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-2 gap-3"
+          >
+            {PAINS.map((pain) => (
+              <motion.div key={pain} variants={fade} className="card flex items-start gap-3">
+                <XCircle size={18} className="text-red-400 shrink-0 mt-0.5" />
+                <p className="text-15 text-nc-body">{pain}</p>
+              </motion.div>
             ))}
-          </ul>
+          </motion.div>
         </div>
+      </section>
 
-        <div className="text-center flex flex-wrap gap-4 justify-center">
-          <Link to="/solution" className="btn-primary">See How We Solve This →</Link>
-          <button onClick={onDemo} className="btn-outline">Talk to Sales</button>
+      {/* CTA */}
+      <section className="section text-center">
+        <h2 className="text-34 font-bold text-nc-dark font-open mb-3">There is a better way.</h2>
+        <p className="section-sub mb-8 max-w-lg mx-auto">
+          NComputing L-Series lets you equip every desk with a fast, secure workstation — without buying a PC for each one.
+        </p>
+        <div className="flex flex-wrap gap-3 justify-center">
+          <Link to="/solution" className="btn-green">
+            See the Solution <ArrowRight size={16} />
+          </Link>
+          <button onClick={onDemo} className="btn-outline-green">Talk to Sales</button>
         </div>
       </section>
     </div>

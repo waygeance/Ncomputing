@@ -1,54 +1,95 @@
-// Navbar.jsx
+// Navbar.jsx — NComputing brand white navbar
 
+import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { ShoppingCart, Menu, X } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import useCart from '../store/cart'
+
+const links = [
+  ['/problem', 'Problem'],
+  ['/solution', 'Solution'],
+  ['/product', 'Products'],
+]
 
 function Navbar({ onDemo }) {
   const count = useCart((s) => s.items.reduce((n, i) => n + i.qty, 0))
+  const [open, setOpen] = useState(false)
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f1a]/80 backdrop-blur-md border-b border-white/10">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-nc-border shadow-sm">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-brand-500 flex items-center justify-center text-white font-bold text-sm">N</div>
-          <span className="font-bold text-white">NComputing <span className="text-brand-500">L-Series</span></span>
+        <Link to="/" className="flex items-center gap-2 shrink-0">
+          <img
+            src="/PNG/ncomputindia-india-trans-350px.png"
+            alt="NComputing India"
+            className="h-8 w-auto object-contain"
+          />
         </Link>
 
-        {/* Links */}
-        <div className="hidden md:flex items-center gap-6">
-          {[['/', 'Home'], ['/problem', 'Problem'], ['/solution', 'Solution'], ['/product', 'Product']].map(([to, label]) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={to === '/'}
-              className={({ isActive }) =>
-                `text-sm font-medium transition-colors ${isActive ? 'text-brand-500' : 'text-slate-400 hover:text-white'}`
-              }
-            >
-              {label}
-            </NavLink>
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-8">
+          <NavLink to="/" end className={({ isActive }) =>
+            `text-15 font-medium transition-colors ${isActive ? 'text-brand' : 'text-nc-body hover:text-brand'}`
+          }>Home</NavLink>
+          {links.map(([to, label]) => (
+            <NavLink key={to} to={to} className={({ isActive }) =>
+              `text-15 font-medium transition-colors ${isActive ? 'text-brand' : 'text-nc-body hover:text-brand'}`
+            }>{label}</NavLink>
           ))}
-        </div>
+        </nav>
 
         {/* Actions */}
         <div className="flex items-center gap-3">
-          <button onClick={onDemo} className="btn-outline text-sm px-4 py-2">
+          <button
+            onClick={onDemo}
+            className="hidden md:inline-flex btn-green text-13 px-4 py-2"
+          >
             Request Demo
           </button>
-          <Link to="/cart" className="relative btn-ghost px-3 py-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.4 7h12.8M10 21a1 1 0 100-2 1 1 0 000 2zm7 0a1 1 0 100-2 1 1 0 000 2z" />
-            </svg>
+
+          <Link to="/cart" className="relative p-2 text-nc-body hover:text-brand transition-colors">
+            <ShoppingCart size={20} />
             {count > 0 && (
-              <span className="absolute -top-1 -right-1 bg-brand-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute -top-0.5 -right-0.5 bg-brand text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+              >
                 {count}
-              </span>
+              </motion.span>
             )}
           </Link>
+
+          {/* Mobile menu toggle */}
+          <button className="md:hidden p-2 text-nc-body" onClick={() => setOpen(!open)}>
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </div>
-    </nav>
+
+      {/* Mobile dropdown */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white border-t border-nc-border overflow-hidden"
+          >
+            <div className="px-4 py-4 flex flex-col gap-3">
+              <NavLink to="/" end onClick={() => setOpen(false)} className="text-15 font-medium text-nc-body hover:text-brand">Home</NavLink>
+              {links.map(([to, label]) => (
+                <NavLink key={to} to={to} onClick={() => setOpen(false)} className="text-15 font-medium text-nc-body hover:text-brand">{label}</NavLink>
+              ))}
+              <button onClick={() => { onDemo(); setOpen(false) }} className="btn-green mt-2 w-full">Request Demo</button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   )
 }
 
