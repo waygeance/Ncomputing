@@ -39,17 +39,23 @@ router.post('/verify', async (req, res) => {
       where: { id: orderId },
       data: {
         paymentStatus: 'PAID',
-        razorpayPaymentId,
+        razorpayPaymentId: razorpayPaymentId || 'dummy_payment_id',
         status: 'PROCESSING',
       },
       include: { items: { include: { product: true } } },
     });
 
-    // Send confirmation email (non-blocking)
-    sendOrderConfirmation(order).catch((e) => console.error('Email error:', e));
+    // Send confirmation email with logging
+    try {
+      await sendOrderConfirmation(order);
+      console.log(`Order confirmation email sent to ${order.email} for order ${order.id}`);
+    } catch (mailErr) {
+      console.error('Order confirmation email error:', mailErr);
+    }
 
     res.json({ success: true, orderId: order.id });
   } catch (e) {
+    console.error('Verify endpoint error:', e);
     res.status(500).json({ error: e.message });
   }
 });
