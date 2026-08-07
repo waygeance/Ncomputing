@@ -1,121 +1,59 @@
+// App.jsx — React Router routes + global Navbar/Footer + LeadModal
+
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
-function App() {
-  const [count, setCount] = useState(0)
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
+import LeadModal from './components/LeadModal'
 
+import Landing from './pages/Landing'
+import Problem from './pages/Problem'
+import Solution from './pages/Solution'
+import Product from './pages/Product'
+import Cart from './pages/Cart'
+import Checkout from './pages/Checkout'
+import OrderConfirm from './pages/OrderConfirm'
+import AdminLogin from './pages/AdminLogin'
+import AdminOrders from './pages/AdminOrders'
+import AdminLeads from './pages/AdminLeads'
+
+// Admin pages don't show the public Navbar/Footer
+const ADMIN_PATHS = ['/admin']
+
+function PublicLayout({ children, onDemo }) {
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      <Navbar onDemo={onDemo} />
+      <main className="pt-16">{children}</main>
+      <Footer />
     </>
+  )
+}
+
+function App() {
+  const [showModal, setShowModal] = useState(false)
+
+  return (
+    <BrowserRouter>
+      {showModal && <LeadModal onClose={() => setShowModal(false)} />}
+      <Routes>
+        {/* Public marketing + ordering routes */}
+        <Route path="/" element={<PublicLayout onDemo={() => setShowModal(true)}><Landing onDemo={() => setShowModal(true)} /></PublicLayout>} />
+        <Route path="/problem" element={<PublicLayout onDemo={() => setShowModal(true)}><Problem onDemo={() => setShowModal(true)} /></PublicLayout>} />
+        <Route path="/solution" element={<PublicLayout onDemo={() => setShowModal(true)}><Solution onDemo={() => setShowModal(true)} /></PublicLayout>} />
+        <Route path="/product" element={<PublicLayout onDemo={() => setShowModal(true)}><Product /></PublicLayout>} />
+        <Route path="/cart" element={<PublicLayout onDemo={() => setShowModal(true)}><Cart /></PublicLayout>} />
+        <Route path="/checkout" element={<PublicLayout onDemo={() => setShowModal(true)}><Checkout /></PublicLayout>} />
+        <Route path="/order-confirmation/:id" element={<PublicLayout onDemo={() => setShowModal(true)}><OrderConfirm /></PublicLayout>} />
+
+        {/* Admin routes (no public nav) */}
+        <Route path="/admin" element={<Navigate to="/admin/orders" replace />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/orders" element={<AdminOrders />} />
+        <Route path="/admin/leads" element={<AdminLeads />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
