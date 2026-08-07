@@ -1,0 +1,7 @@
+# Root level gitignore
+node_modules/
+.env
+dist/
+*.local
+.DS_Store
+Thumbs.db
