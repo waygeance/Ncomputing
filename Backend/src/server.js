@@ -12,7 +12,8 @@ const admin = require('./routes/admin');
 
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
+app.use(cors());
+app.options('*', cors());
 app.use(express.json());
 
 // Health check
@@ -24,6 +25,12 @@ app.use('/api/orders', orders);
 app.use('/api/leads', leads);
 app.use('/api/payments', payments);
 app.use('/api/admin', admin);
+
+// Error handler to prevent header dropping on failures
+app.use((err, req, res, next) => {
+  console.error('API Error:', err);
+  res.status(500).json({ error: err.message || 'Internal Server Error' });
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
